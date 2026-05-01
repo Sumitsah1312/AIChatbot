@@ -8,9 +8,9 @@ const api = axios.create({
   },
 });
 
-export const sendMessage = async (message) => {
+export const sendMessage = async (session, query) => {
   try {
-    const response = await api.post('/chat', { message });
+    const response = await api.post('/chat', { session_id: session, message: query });
     return response.data;
   } catch (error) {
     console.error('API Error:', error);

@@ -15,6 +15,7 @@ function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   
   const messagesEndRef = useRef(null);
+  const sessionIdRef = useRef(`session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -40,7 +41,7 @@ function App() {
     setError(null);
 
     try {
-      const data = await sendMessage(text);
+      const data = await sendMessage(sessionIdRef.current, text);
       const botMessage = { id: Date.now() + 1, text: data.response, isBot: true };
       setMessages(prev => [...prev, botMessage]);
     } catch (err) {
@@ -52,6 +53,7 @@ function App() {
   };
 
   const clearChat = () => {
+    sessionIdRef.current = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     setMessages([{ id: 1, text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true }]);
   };
 
@@ -72,7 +74,7 @@ function App() {
           </div>
           <div>
             <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 leading-tight">
-              Antigravity AI
+              Genni AI
             </h1>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-[0.1em]">
               Next-Gen Assistant
