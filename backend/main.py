@@ -1,5 +1,6 @@
 from openai import OpenAI
 from fastapi import FastAPI,Body
+from fastapi.middleware.cors import CORSMiddleware
 from model.chatrequest import ChatRequest
 from collections import defaultdict
 from dotenv import load_dotenv
@@ -9,6 +10,13 @@ load_dotenv()
 # To store sessions and messages
 chat_sessions = defaultdict(list)
 app=FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 client=OpenAI(
     api_key=os.getenv("GEMINI_KEY"),
@@ -41,5 +49,5 @@ def chat(req:ChatRequest):
     chat_sessions[req.session_id].append(
         {"role":"assistant","content":assistant_reply}
     )
-    return assistant_reply
+    return {"response": assistant_reply}
 
